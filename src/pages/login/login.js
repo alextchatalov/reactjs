@@ -12,7 +12,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
+import axios from "axios";
+import oauth from "axios-oauth-client";
 
 function Copyright() {
   return (
@@ -51,11 +53,41 @@ export default function Login() {
     const classes = useStyles();
     const history = useHistory();
 
-    const login = () =>{ 
-      let path = '/app'; 
-      history.push(path);
-    }
+   // const login = () =>{ 
+     // let path = '/app'; 
+     // history.push(path);
+    //}
 
+    const getAuthorizationCode = oauth.client(axios.create(), {
+      url: 'localhost:8080/oauth/token',
+      grant_type: 'password',
+      client_id: 'monitorrest',
+      client_secret: '123',
+      redirect_uri: '/',
+      scope: 'password',
+    });
+
+   const handleSignIn = async e => {
+    e.preventDefault();
+    //const { email, password } = this.state;
+    //if (!email || !password) {
+      //this.setState({ error: "Preencha e-mail e senha para continuar!" });
+    //} else {
+      try {
+        const requestToken = await getAuthorizationCode();
+        console.log('TOKEN: ', requestToken);
+       // const response = await api.post("/sessions", { email, password });
+        //login(response.data.token);
+        //this.props.history.push("/app");
+      } catch (err) {
+        this.setState({
+          error:
+            "Houve um problema com o login, verifique suas credenciais. T.T"
+        });
+      //}
+    }
+  };
+    
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -94,7 +126,7 @@ export default function Login() {
               label="Remember me"
             />
             <Button
-              onClick={login}
+              onClick={handleSignIn}
               type="submit"
               fullWidth
               variant="contained"
