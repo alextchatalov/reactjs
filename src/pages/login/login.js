@@ -12,9 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { useHistory } from 'react-router-dom';
-import axios from "axios";
-import oauth from "axios-oauth-client";
+import { login } from "../../services/auth";
+import { useHistory } from 'react-router-dom'
 
 function Copyright() {
   return (
@@ -53,40 +52,28 @@ export default function Login() {
     const classes = useStyles();
     const history = useHistory();
 
-   // const login = () =>{ 
-     // let path = '/app'; 
-     // history.push(path);
-    //}
+   //const handleSignIn = async e => {
+   //   e.preventDefault();
+   //   const { email, password } = this.state;
+   //   if (!email || !password) {
+   //     this.setState({ error: "Preencha e-mail e senha para continuar!" });
+   //   } else {
+   //     try {
+   //       const response = await api.post("/sessions", { email, password });
+   //       login(response.data.token);
+   //       this.props.history.push("/app");
+   //     } catch (err) {
+   //       this.setState({
+   //         error:
+   //           "Houve um problema com o login, verifique suas credenciais. T.T"
+   //       });
+   //     }
+   //   }
+   // };
 
-    const getAuthorizationCode = oauth.client(axios.create(), {
-      url: 'localhost:8080/oauth/token',
-      grant_type: 'password',
-      client_id: 'monitorrest',
-      client_secret: '123',
-      redirect_uri: '/',
-      scope: 'password',
-    });
-
-   const handleSignIn = async e => {
-    e.preventDefault();
-    //const { email, password } = this.state;
-    //if (!email || !password) {
-      //this.setState({ error: "Preencha e-mail e senha para continuar!" });
-    //} else {
-      try {
-        const requestToken = await getAuthorizationCode();
-        console.log('TOKEN: ', requestToken);
-       // const response = await api.post("/sessions", { email, password });
-        //login(response.data.token);
-        //this.props.history.push("/app");
-      } catch (err) {
-        this.setState({
-          error:
-            "Houve um problema com o login, verifique suas credenciais. T.T"
-        });
-      //}
+    const logarFake = () => {
+      history.push("/home");
     }
-  };
     
     return (
       <Container component="main" maxWidth="xs">
@@ -109,6 +96,7 @@ export default function Login() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={e => this.setState({ email: e.target.value })}
             />
             <TextField
               variant="outlined"
@@ -120,13 +108,14 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={e => this.setState({ password: e.target.value })}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
             <Button
-              onClick={handleSignIn}
+              onClick={logarFake}
               type="submit"
               fullWidth
               variant="contained"
