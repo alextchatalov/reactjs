@@ -19,7 +19,7 @@ const PrivateRoute  = ({ component: Component, ...rest  }) => (
 const Routes = () => (
    <BrowserRouter>
     <Switch>
-        <Route exact path="/" component={() => <Login/> }/>
+        <Route exact path="/" component={() => <HomePage /> }/>
         <PrivateRoute path="/app" component={ () => <h1>Você está Logado</h1>}/>
         <PrivateRoute path="/home" component={ () => <HomePage />}/>
         <Route path="*" component={() => <h1>Page not found</h1>} />
