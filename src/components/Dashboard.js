@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState, useReducer} from 'react'
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -22,6 +22,7 @@ import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
+import api from '../services/api'
 
 function Copyright() {
   return (
@@ -118,8 +119,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard() {
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [list, setList] = useState([]);
+  const [total, setTotal] = useState();
+  const [totalApplied, setTotalApplied] = useState(0);
+
+  useEffect(()=>{
+    getAllInvestiments();
+    getTotalApplied();
+  },[]) 
+
+  function getTotalApplied() {
+    api.get("/investiment/totalApplied")
+    .then((total)=> {
+      console.log(total.data)
+      setTotalApplied(total.data)
+    });
+  }
+
+  async function getAllInvestiments() {
+    await api.get("/investiment/list")
+    .then( (investiment) => {
+      setList(investiment.data);
+      updateTotalAmunt();
+    });
+  }
+
+  function updateTotalAmunt() {
+    setTotal(list.reduce( (prevAmount, amount) =>  prevAmount + amount.appliedAmount, 0))
+  }
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -182,13 +213,13 @@ export default function Dashboard() {
             {/* Recent Deposits */}
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                <Deposits />
+                <Deposits totalApplied={totalApplied}/>
               </Paper>
             </Grid>
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Orders />
+                <Orders list={list}/>
               </Paper>
             </Grid>
           </Grid>

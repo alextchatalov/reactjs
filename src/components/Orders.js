@@ -22,37 +22,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Orders() {
-  const classes = useStyles();
-  const [list, setList] = useState([]);
-  const [total, setTotal] = useState();
-  
-  useEffect(()=>{
-    getAllInvestiments();
-  },[]) 
+export default function Orders( {list}) {
 
-  async function getAllInvestiments() {
-    await api.get("/investiment/list")
-    .then( (investiment) => {
-      setList(investiment.data);
-    });
-    updateTotalAmunt();
-  }
-  function updateTotalAmunt() {
-    setTotal(list.reduce( (prevAmount, amount) => prevAmount + amount.appliedAmount))
-  }
+  const classes = useStyles();
 
   function onChangeHandler(e) {
     console.log("UPLOAD")
     console.log(e.target.files[0])
     const fd = new FormData();
     fd.append('files', e.target.files[0])
-    api.post("/investiment/upload",fd).then(res => getAllInvestiments())
+   // api.post("/investiment/upload",fd).then(res => getAllInvestiments())
   }
 
   return (
     <React.Fragment>
-      {total}
       <Button
         variant="contained"
         component="label">

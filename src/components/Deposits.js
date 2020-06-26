@@ -16,22 +16,21 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Deposits() {
+export default function Deposits({totalApplied}) {
   
   const classes = useStyles();
-  const [totalApplied, setTotalApplied] = useState(0);
-  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+  //const [totalApplied, setTotalApplied] = useState(0);
 
-  useEffect(()=>{
-    api.get("/investiment/totalApplied")
-    .then((total)=> {
-      console.log(total.data)
-      setTotalApplied(total.data)
-    });
-  }, [])
+//  useEffect(()=>{
+//    api.get("/investiment/totalApplied")
+//    .then((total)=> {
+//      console.log(total.data)
+//      setTotalApplied(total.data)
+//    });
+//  }, [])
   return (
     <React.Fragment>
-      <Title>Recent Deposits</Title>
+      <Title>Total Aplicado</Title>
       <Typography component="p" variant="h4">
       <NumberFormat value={totalApplied} displayType={'text'} thousandSeparator={true} prefix={'R$'}></NumberFormat>
       </Typography>
