@@ -26,14 +26,11 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Title from './Title';
-import CurrencyTextField from '@unicef/material-ui-currency-textfield'
-import Moment from 'react-moment';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright Â© '}
+      {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
         Your Website
       </Link>{' '}
