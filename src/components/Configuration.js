@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useReducer} from 'react'
+import React, {useState} from 'react'
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -19,10 +19,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
 import api from '../services/api'
+import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
 
 function Copyright() {
   return (
@@ -114,44 +113,16 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 240,
+    height: 75,
   },
 }));
-
-export default function Dashboard() {
-
+export default function Configuration() {
+  
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
-  const [list, setList] = useState([]);
-  const [total, setTotal] = useState();
-  const [totalApplied, setTotalApplied] = useState(0);
-
-  useEffect(()=>{
-    getAllInvestiments();
-    getTotalApplied();
-  },[]) 
-
-  function getTotalApplied() {
-    api.get("/investiment/totalApplied")
-    .then((total)=> {
-      console.log(total.data)
-      setTotalApplied(total.data)
-    });
-  }
-
-  async function getAllInvestiments() {
-    await api.get("/investiment/list")
-    .then( (investiment) => {
-      setList(investiment.data);
-      updateTotalAmunt();
-    });
-  }
-
-
-
-  function updateTotalAmunt() {
-    setTotal(list.reduce( (prevAmount, amount) =>  prevAmount + amount.appliedAmount, 0))
-  }
+  const [tipo, setTipoAlert, ] = React.useState('error');
+  const [messageAlert, setMessageAlert, ] = React.useState('Default');
+  const [showAlert, setShowAlert] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -160,6 +131,23 @@ export default function Dashboard() {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  function onChangeHandler(e) {
+    console.log("UPLOAD")
+    console.log(e.target.files[0])
+    const fd = new FormData();
+    fd.append('files', e.target.files[0])
+    api.post("/investiment/upload",fd).then(res => {
+                                                    setTipoAlert('success');
+                                                    setMessageAlert('Upload do arquivo realizado com sucesso!')
+                                                    setShowAlert(true);
+                                                   },
+                                            error => {
+                                                      setTipoAlert('error');
+                                                      setMessageAlert('Error ao realiar o upload do arquivo: ' + error);
+                                                      setShowAlert(true);
+                                                     })
+    }
 
   return (
     <div className={classes.root}>
@@ -204,24 +192,25 @@ export default function Dashboard() {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
+        <div
+          style={{display: showAlert ? 'block': 'none'}}
+          className="container"
+        >
+          <Alert severity={tipo}>{messageAlert}</Alert>
+        </div>
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
+          <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits totalApplied={totalApplied}/>
-              </Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Orders list={list}/>
+                <Button
+                  variant="contained"
+                  component="label">
+                    UPLOAD
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={onChangeHandler}/>
+                </Button>
               </Paper>
             </Grid>
           </Grid>

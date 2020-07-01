@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useReducer} from 'react'
+import React, {useState, useEffect} from 'react'
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -19,15 +19,21 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
 import api from '../services/api'
+import Alert from '@material-ui/lab/Alert';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Title from './Title';
+import CurrencyTextField from '@unicef/material-ui-currency-textfield'
+import Moment from 'react-moment';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
+      {'Copyright Â© '}
       <Link color="inherit" href="https://material-ui.com/">
         Your Website
       </Link>{' '}
@@ -114,43 +120,31 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 240,
+    height: 75,
   },
 }));
-
-export default function Dashboard() {
-
+export default function Rebalance() {
+  
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [tipo, setTipoAlert, ] = React.useState('error');
+  const [messageAlert, setMessageAlert, ] = React.useState('Default');
+  const [showAlert, setShowAlert] = React.useState(false);
   const [list, setList] = useState([]);
-  const [total, setTotal] = useState();
-  const [totalApplied, setTotalApplied] = useState(0);
 
   useEffect(()=>{
     getAllInvestiments();
-    getTotalApplied();
   },[]) 
-
-  function getTotalApplied() {
-    api.get("/investiment/totalApplied")
-    .then((total)=> {
-      console.log(total.data)
-      setTotalApplied(total.data)
-    });
-  }
 
   async function getAllInvestiments() {
     await api.get("/investiment/list")
     .then( (investiment) => {
       setList(investiment.data);
-      updateTotalAmunt();
     });
-  }
-
-
-
-  function updateTotalAmunt() {
-    setTotal(list.reduce( (prevAmount, amount) =>  prevAmount + amount.appliedAmount, 0))
+    await api.get("/investiment/rebalancear")
+    .then( (investiment) => {
+     console.log(investiment.data);
+    });
   }
 
   const handleDrawerOpen = () => {
@@ -176,7 +170,7 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Dashboard
+            Rebalancear Carteira
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
@@ -204,24 +198,42 @@ export default function Dashboard() {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
+        <div
+          style={{display: showAlert ? 'block': 'none'}}
+          className="container"
+        >
+          <Alert severity={tipo}>{messageAlert}</Alert>
+        </div>
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits totalApplied={totalApplied}/>
-              </Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Orders list={list}/>
+          <Grid>
+              <Paper>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Ação</TableCell>
+                        <TableCell>Tipo</TableCell>
+                        <TableCell>Preço</TableCell>
+                        <TableCell>Ações/Cotas</TableCell>
+                        <TableCell>Nota</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {list.map((list) => (
+                        <TableRow key={list.investimentCode}>
+                          <TableCell>{list.investimentCode}</TableCell>
+                          <TableCell>{list.type}</TableCell>
+                          <TableCell>{list.appliedAmount}</TableCell>
+                          <TableCell> 
+                          <input type="text" pattern="[0-9]*"/>
+                          </TableCell>
+                          <TableCell> 
+                          <input type="text" pattern="[0-9]*"/>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
               </Paper>
             </Grid>
           </Grid>

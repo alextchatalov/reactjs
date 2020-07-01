@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -7,8 +7,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
-import api from '../services/api'
-import Button from '@material-ui/core/Button';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 import Moment from 'react-moment';
 
@@ -26,26 +24,9 @@ export default function Orders( {list}) {
 
   const classes = useStyles();
 
-  function onChangeHandler(e) {
-    console.log("UPLOAD")
-    console.log(e.target.files[0])
-    const fd = new FormData();
-    fd.append('files', e.target.files[0])
-   // api.post("/investiment/upload",fd).then(res => getAllInvestiments())
-  }
-
   return (
     <React.Fragment>
-      <Button
-        variant="contained"
-        component="label">
-        Upload
-        <input
-          type="file"
-          style={{ display: "none" }}
-          onChange={onChangeHandler}/>
-      </Button>
-      <Title>Recent Orders</Title>
+      <Title>Carteira</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
