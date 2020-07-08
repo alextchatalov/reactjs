@@ -26,6 +26,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
 
 function Copyright() {
   return (
@@ -127,21 +128,46 @@ export default function Rebalance() {
   const [tipo, setTipoAlert, ] = React.useState('error');
   const [messageAlert, setMessageAlert, ] = React.useState('Default');
   const [showAlert, setShowAlert] = React.useState(false);
-  const [list, setList] = useState([]);
-
+  const [rebalance, setList] = useState([]);
+  const walletRebalance = {
+    investiment:'',
+    note:'',
+    percentWallet:'',
+    idealTotalApplied:'',
+    idealPercentWallet:'',
+    idealAmount:'',
+    adValueApply:'',
+    adPercentWallet:'',
+    adAmount:'',
+    status:'',
+  }
   useEffect(()=>{
     getAllInvestiments();
   },[]) 
 
   async function getAllInvestiments() {
-    await api.get("/investiment/list")
-    .then( (investiment) => {
-      setList(investiment.data);
+    await api.get("/rebalance/list")
+    .then( (rebalance) => {
+      setList(rebalance.data);
     });
-    await api.get("/investiment/rebalancear")
-    .then( (investiment) => {
-     console.log(investiment.data);
-    });
+  }
+
+  function saveRebalance(reb) {
+
+    console.log(reb);
+    const fd = new FormData();
+    fd.append('rebalance', reb);
+
+    api.post("/rebalance/update",fd).then(res => {
+      setTipoAlert('success');
+      setMessageAlert('Rebalanceamento da carteira salvo com sucesso!')
+      setShowAlert(true);
+     },
+     error => {
+        setTipoAlert('error');
+        setMessageAlert('Error ao atualizar o rebalanceamento da carteira: ' + error);
+        setShowAlert(true);
+       })
   }
 
   const handleDrawerOpen = () => {
@@ -205,28 +231,46 @@ export default function Rebalance() {
           <Grid container spacing={3}>
           <Grid>
               <Paper>
-                  <Table size="small">
+                  <Table size="medium">
                     <TableHead>
                       <TableRow>
                         <TableCell>Ação</TableCell>
-                        <TableCell>Tipo</TableCell>
-                        <TableCell>Preço</TableCell>
-                        <TableCell>Ações/Cotas</TableCell>
                         <TableCell>Nota</TableCell>
+                        <TableCell>Percentagem Carterira</TableCell>
+                        <TableCell>Total ideal Aplicado</TableCell>
+                        <TableCell>Total Porcentagem ideal</TableCell>
+                        <TableCell>Valor Ideal</TableCell>
+                        <TableCell>Valor Aplicado Ajustado</TableCell>
+                        <TableCell>Porcentagem da Carteira Ajustada</TableCell>
+                        <TableCell>Valor Ajustado</TableCell>
+                        <TableCell>Status</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {list.map((list) => (
-                        <TableRow key={list.investimentCode}>
-                          <TableCell>{list.investimentCode}</TableCell>
-                          <TableCell>{list.type}</TableCell>
-                          <TableCell>{list.appliedAmount}</TableCell>
-                          <TableCell> 
-                          <input type="text" pattern="[0-9]*"/>
+                      {rebalance.map((reb) => (
+                        <TableRow key={reb.investiment.investimentCode}>
+                          <TableCell>{reb.investiment.investimentCode}</TableCell>
+                          <TableCell>
+                            <TextField
+                              id="rebalance-note"
+                              type="number"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              size="small"
+                              value={reb}
+                              variant="outlined"
+                              onChange={(e) => saveRebalance(reb)}
+                            />
                           </TableCell>
-                          <TableCell> 
-                          <input type="text" pattern="[0-9]*"/>
-                          </TableCell>
+                          <TableCell>{reb.percentWallet}</TableCell>
+                          <TableCell>{reb.idealTotalApplied}</TableCell>
+                          <TableCell>{reb.idealPercentWallet}</TableCell>
+                          <TableCell>{reb.idealAmount}</TableCell>
+                          <TableCell>{reb.adValueApply}</TableCell>
+                          <TableCell>{reb.adPercentWallet}</TableCell>
+                          <TableCell>{reb.adAmount}</TableCell>
+                          <TableCell>{reb.status}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

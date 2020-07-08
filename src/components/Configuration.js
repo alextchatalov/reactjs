@@ -133,10 +133,8 @@ export default function Configuration() {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   function onChangeHandler(e) {
-    console.log("UPLOAD")
-    console.log(e.target.files[0])
     const fd = new FormData();
-    fd.append('files', e.target.files[0])
+    fd.append('files', e.target.files[0]);
     api.post("/investiment/upload",fd).then(res => {
                                                     setTipoAlert('success');
                                                     setMessageAlert('Upload do arquivo realizado com sucesso!')
