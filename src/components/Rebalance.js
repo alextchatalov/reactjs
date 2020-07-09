@@ -27,6 +27,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import LineTable from './LineTable';
 
 function Copyright() {
   return (
@@ -155,10 +157,10 @@ export default function Rebalance() {
   function saveRebalance(reb) {
 
     console.log(reb);
-    const fd = new FormData();
-    fd.append('rebalance', reb);
+    //const fd = new FormData();
+    //fd.append('rebalance', reb);
 
-    api.post("/rebalance/update",fd).then(res => {
+    api.post("/rebalance/update",reb).then(res => {
       setTipoAlert('success');
       setMessageAlert('Rebalanceamento da carteira salvo com sucesso!')
       setShowAlert(true);
@@ -247,32 +249,9 @@ export default function Rebalance() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rebalance.map((reb) => (
-                        <TableRow key={reb.investiment.investimentCode}>
-                          <TableCell>{reb.investiment.investimentCode}</TableCell>
-                          <TableCell>
-                            <TextField
-                              id="rebalance-note"
-                              type="number"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              size="small"
-                              value={reb}
-                              variant="outlined"
-                              onChange={(e) => saveRebalance(reb)}
-                            />
-                          </TableCell>
-                          <TableCell>{reb.percentWallet}</TableCell>
-                          <TableCell>{reb.idealTotalApplied}</TableCell>
-                          <TableCell>{reb.idealPercentWallet}</TableCell>
-                          <TableCell>{reb.idealAmount}</TableCell>
-                          <TableCell>{reb.adValueApply}</TableCell>
-                          <TableCell>{reb.adPercentWallet}</TableCell>
-                          <TableCell>{reb.adAmount}</TableCell>
-                          <TableCell>{reb.status}</TableCell>
-                        </TableRow>
-                      ))}
+                      {
+                        rebalance.map((reb, i) => <LineTable saveRebalance={saveRebalance} rebalance={reb} key={i}/>)
+                      }
                     </TableBody>
                   </Table>
               </Paper>
