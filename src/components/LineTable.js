@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {TableCell, TableRow, TextField, Button} from '@material-ui/core';
+import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 
 export default function LineTable(props){
     const [reb, setRebalance] = useState(props.rebalance ?? {});
@@ -17,7 +18,7 @@ export default function LineTable(props){
         console.log('props.rebalance', props.rebalance)
     }, [props.rebalance])
 
-    return <TableRow key={reb.investiment.investimentCode}>
+    return <TableRow key={reb.id}>
             <TableCell>{reb.investiment.investimentCode}</TableCell>
             <TableCell>
             <TextField
@@ -27,12 +28,22 @@ export default function LineTable(props){
                 InputLabelProps={{
                 shrink: true,
                 }}
+                value={reb.note}
                 size="small"
                 variant="outlined"
                 onChange={handleChange}
             />
             </TableCell>
-            <TableCell>{reb.percentWallet}</TableCell>
+            <TableCell>
+            <CurrencyTextField
+                  value={reb.investiment.appliedAmount}
+                  currencySymbol="R$"
+                  decimalCharacter=","
+                  digitGroupSeparator="."
+                  disabled
+                />
+            </TableCell>
+            <TableCell>{reb.investiment.portfolioShare}</TableCell>
             <TableCell>{reb.idealTotalApplied}</TableCell>
             <TableCell>{reb.idealPercentWallet}</TableCell>
             <TableCell>{reb.idealAmount}</TableCell>

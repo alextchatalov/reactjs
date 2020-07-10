@@ -26,9 +26,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import LineTable from './LineTable';
+import TableContainer from '@material-ui/core/TableContainer'; 
 
 function Copyright() {
   return (
@@ -229,15 +228,15 @@ export default function Rebalance() {
         >
           <Alert severity={tipo}>{messageAlert}</Alert>
         </div>
-        <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-          <Grid>
-              <Paper>
+          <Grid item xs={12}>
+            <TableContainer component={Paper}> 
                   <Table size="medium">
                     <TableHead>
                       <TableRow>
                         <TableCell>Ação</TableCell>
                         <TableCell>Nota</TableCell>
+                        <TableCell>Total Aplicado</TableCell>
                         <TableCell>Percentagem Carterira</TableCell>
                         <TableCell>Total ideal Aplicado</TableCell>
                         <TableCell>Total Porcentagem ideal</TableCell>
@@ -254,13 +253,12 @@ export default function Rebalance() {
                       }
                     </TableBody>
                   </Table>
-              </Paper>
+                </TableContainer>  
             </Grid>
           </Grid>
           <Box pt={4}>
             <Copyright />
           </Box>
-        </Container>
       </main>
     </div>
   );
