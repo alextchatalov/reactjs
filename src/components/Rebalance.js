@@ -11,7 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
@@ -130,18 +129,16 @@ export default function Rebalance() {
   const [messageAlert, setMessageAlert, ] = React.useState('Default');
   const [showAlert, setShowAlert] = React.useState(false);
   const [rebalance, setList] = useState([]);
-  const walletRebalance = {
-    investiment:'',
-    note:'',
-    percentWallet:'',
-    idealTotalApplied:'',
-    idealPercentWallet:'',
-    idealAmount:'',
-    adValueApply:'',
-    adPercentWallet:'',
-    adAmount:'',
-    status:'',
+  
+
+  function calculateTotalNote() {
+    return rebalance.reduce((total, rb) => total + rb.note, 0);
   }
+
+  function calculateTotalApplied() {
+    return rebalance.reduce((total, rb) => total + rb.investiment.appliedAmount, 0);
+  }
+
   useEffect(()=>{
     getAllInvestiments();
   },[]) 
@@ -177,7 +174,6 @@ export default function Rebalance() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
     <div className={classes.root}>
@@ -235,12 +231,10 @@ export default function Rebalance() {
                     <TableHead>
                       <TableRow>
                         <TableCell>Ação</TableCell>
+                        <TableCell>Cotação</TableCell>
                         <TableCell>Nota</TableCell>
-                        <TableCell>Total Aplicado</TableCell>
-                        <TableCell>Percentagem Carterira</TableCell>
-                        <TableCell>Total ideal Aplicado</TableCell>
-                        <TableCell>Total Porcentagem ideal</TableCell>
                         <TableCell>Valor Ideal</TableCell>
+                        <TableCell>Total Porcentagem ideal</TableCell>
                         <TableCell>Valor Aplicado Ajustado</TableCell>
                         <TableCell>Porcentagem da Carteira Ajustada</TableCell>
                         <TableCell>Valor Ajustado</TableCell>
@@ -249,7 +243,7 @@ export default function Rebalance() {
                     </TableHead>
                     <TableBody>
                       {
-                        rebalance.map((reb, i) => <LineTable saveRebalance={saveRebalance} rebalance={reb} key={i}/>)
+                        rebalance.map((reb, i) => <LineTable saveRebalance={saveRebalance} rebalance={reb} key={i} totalNote={calculateTotalNote()} totalApllied={calculateTotalApplied()} />)
                       }
                     </TableBody>
                   </Table>

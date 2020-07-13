@@ -30,10 +30,10 @@ export default function Orders( {list}) {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>AÃ§Ã£o</TableCell>
+            <TableCell>Ação</TableCell>
             <TableCell>Tipo</TableCell>
             <TableCell>Corretora</TableCell>
-            <TableCell>Data de AplicaÃ§Ã£o</TableCell>
+            <TableCell>Data de Aplicação</TableCell>
             <TableCell>Valor Aplicado</TableCell>
             <TableCell>Saldo</TableCell>
             <TableCell>Rentabilidade</TableCell>

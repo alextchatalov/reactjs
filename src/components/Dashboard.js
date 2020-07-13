@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useReducer} from 'react'
+import React, {useEffect, useState} from 'react'
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -27,7 +27,7 @@ import api from '../services/api'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
+      {'Copyright Â© '}
       <Link color="inherit" href="https://material-ui.com/">
         Your Website
       </Link>{' '}
@@ -123,7 +123,6 @@ export default function Dashboard() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [list, setList] = useState([]);
-  const [total, setTotal] = useState();
   const [totalApplied, setTotalApplied] = useState(0);
 
   useEffect(()=>{
@@ -143,14 +142,7 @@ export default function Dashboard() {
     await api.get("/investiment/list")
     .then( (investiment) => {
       setList(investiment.data);
-      updateTotalAmunt();
     });
-  }
-
-
-
-  function updateTotalAmunt() {
-    setTotal(list.reduce( (prevAmount, amount) =>  prevAmount + amount.appliedAmount, 0))
   }
 
   const handleDrawerOpen = () => {
