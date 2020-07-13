@@ -235,9 +235,8 @@ export default function Rebalance() {
                         <TableCell>Nota</TableCell>
                         <TableCell>Valor Ideal</TableCell>
                         <TableCell>Total Porcentagem ideal</TableCell>
-                        <TableCell>Valor Aplicado Ajustado</TableCell>
-                        <TableCell>Porcentagem da Carteira Ajustada</TableCell>
-                        <TableCell>Valor Ajustado</TableCell>
+                        <TableCell>Qtd ideal</TableCell>
+                        <TableCell>Qtd Ajustado</TableCell>
                         <TableCell>Status</TableCell>
                       </TableRow>
                     </TableHead>
