@@ -28,13 +28,15 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1",
     "recharts": "^1.8.5",
+    "serve": "^11.3.2",
     "styled-components": "^5.1.0",
     "typeface-roboto": "0.0.75"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "start": "serve -s build",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build"
   },
