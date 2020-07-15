@@ -234,10 +234,13 @@ export default function Rebalance() {
                         <TableCell>Cotação</TableCell>
                         <TableCell>Nota</TableCell>
                         <TableCell>Valor Ideal</TableCell>
-                        <TableCell>Total Porcentagem ideal</TableCell>
+                        <TableCell>Porcentagem ideal</TableCell>
                         <TableCell>Qtd ideal</TableCell>
+                        <TableCell>Valor Ajustado</TableCell>
+                        <TableCell>Percentagem Ajustado</TableCell>
                         <TableCell>Qtd Ajustado</TableCell>
                         <TableCell>Status</TableCell>
+                        <TableCell>-</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>

@@ -34,7 +34,7 @@ export default function LineTable(props){
             } else {
                 reb.adValueApply = 0;
             }
-            // calcular ajuste da quantidade de ação
+            // calcular ajuste da quantidade de aÃ§Ãµes
             if((price + adValueApply) > 0) {
                 var adAmountCalc = adValueApply.toFixed(2) / price;
                 reb.adAmount = adAmountCalc.toFixed(0);
@@ -42,7 +42,10 @@ export default function LineTable(props){
                 reb.adAmount = 0;
             }
 
-            return idelaPercent.toFixed(1);
+            // calcular porcentagem de ajuste
+            var adPercentWallet = (adValueApply/totalApllied) * 100;
+            reb.adPercentWallet = adPercentWallet.toFixed(2);
+            return idelaPercent.toFixed(2);
         } 
         return 0;
     }
@@ -86,7 +89,9 @@ export default function LineTable(props){
                 />
             </TableCell>
             <TableCell>{calculteIdealPercentWallet(reb)}%</TableCell>
+            <TableCell>Qtd Ideal</TableCell>
             <TableCell>{reb.adValueApply}</TableCell>
+            <TableCell>{reb.adPercentWallet}%</TableCell>
             <TableCell>{reb.adAmount}</TableCell>
             <TableCell>{reb.status}</TableCell>
             <TableCell>
