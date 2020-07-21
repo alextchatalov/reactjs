@@ -17,8 +17,8 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
-import api from '../services/api'
+import { mainListItems, secondaryListItems } from '../listItems';
+import api from '../../services/api'
 import Alert from '@material-ui/lab/Alert';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -121,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
     height: 75,
   },
 }));
-export default function Rebalance() {
+export default function EditWallet() {
   
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);

@@ -30,10 +30,11 @@ export default function Orders( {list}) {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Ação</TableCell>
+            <TableCell>AÃ§Ã£o</TableCell>
+            <TableCell>Quantidade</TableCell>
             <TableCell>Tipo</TableCell>
             <TableCell>Corretora</TableCell>
-            <TableCell>Data de Aplicação</TableCell>
+            <TableCell>Data de AplicaÃ§Ã£o</TableCell>
             <TableCell>Valor Aplicado</TableCell>
             <TableCell>Saldo</TableCell>
             <TableCell>Rentabilidade</TableCell>
@@ -44,6 +45,7 @@ export default function Orders( {list}) {
           {list.map((list) => (
             <TableRow key={list.investimentCode}>
               <TableCell>{list.investimentCode}</TableCell>
+              <TableCell>{list.amount}</TableCell>
               <TableCell>{list.type}</TableCell>
               <TableCell>{list.broker}</TableCell>
               <TableCell> <Moment format="DD/MM/YYYY">{list.firstDateApplication}</Moment></TableCell>

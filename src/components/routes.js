@@ -6,7 +6,8 @@ import { isAuthenticated } from "../components/auth";
 import  Login  from '../pages/login/login';
 import HomePage from '../pages/home/homePage';
 import Configuration from './Configuration'
-import Rebalance from './Rebalance';
+import Rebalance from './../components/rebalance/Rebalance';
+import EditWallet from './../components/editWallet/EditWallet'
 
 const PrivateRoute  = ({ component: Component, ...rest  }) => (
     <Route {...rest} render={props => (
@@ -26,6 +27,7 @@ const Routes = () => (
         <PrivateRoute path="/home" component={ () => <HomePage />}/>
         <PrivateRoute path="/configuration" component={ () => <Configuration />}/>
         <PrivateRoute path="/rebalance" component={ () => <Rebalance />}/>
+        <PrivateRoute path="/editWalle" component={ () => <EditWallet />}/>
         <Route path="*" component={() => <h1>Page not found</h1>} />
     </Switch>     
    </BrowserRouter> 

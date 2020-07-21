@@ -3,9 +3,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
+import HomeIcon from '@material-ui/icons/Home';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import EditIcon from '@material-ui/icons/Edit';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -15,21 +15,21 @@ export const mainListItems = (
   <div>
     <ListItem button component={Link} to="/home">
       <ListItemIcon>
-        <DashboardIcon />
+        <HomeIcon />
       </ListItemIcon>
-      <ListItemText primary="Dashboard" />
+      <ListItemText primary="Home" />
     </ListItem>
     <ListItem button component={Link} to="/rebalance">
       <ListItemIcon>
-        <ShoppingCartIcon />
+        <AccountBalanceWalletIcon />
       </ListItemIcon>
       <ListItemText primary="Rebalancear Carteira" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/editWalle">
       <ListItemIcon>
-        <PeopleIcon />
+        <EditIcon />
       </ListItemIcon>
-      <ListItemText primary="Customers" />
+      <ListItemText primary="Editar Carteira" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
