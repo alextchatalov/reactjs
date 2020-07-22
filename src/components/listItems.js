@@ -5,11 +5,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import HomeIcon from '@material-ui/icons/Home';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import EditIcon from '@material-ui/icons/Edit';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { Link } from "react-router-dom";
+import DonutSmallIcon from '@material-ui/icons/DonutSmall';
 
 export const mainListItems = (
   <div>
@@ -21,15 +21,15 @@ export const mainListItems = (
     </ListItem>
     <ListItem button component={Link} to="/rebalance">
       <ListItemIcon>
-        <AccountBalanceWalletIcon />
+        <DonutSmallIcon />
       </ListItemIcon>
       <ListItemText primary="Rebalancear Carteira" />
     </ListItem>
-    <ListItem button component={Link} to="/editWalle">
+    <ListItem button component={Link} to="/wallet">
       <ListItemIcon>
-        <EditIcon />
+        <AccountBalanceWalletIcon />
       </ListItemIcon>
-      <ListItemText primary="Editar Carteira" />
+      <ListItemText primary="Carteira" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>

@@ -120,6 +120,11 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 75,
   },
+  tableCell: {
+    "$hover:hover &": {
+      color: "pink"
+    }
+  },
 }));
 export default function Rebalance() {
   

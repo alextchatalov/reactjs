@@ -49,8 +49,33 @@ export default function LineTable(props){
         } 
         return 0;
     }
-    
 
+    function reCalculateIdealAmount(reb) {
+
+        var amount = +reb.amount ?? 0;
+        var adAmount = +reb.adAmount ?? 0;
+        var idealAmount = amount + adAmount;
+        reb.idealAmount = idealAmount;
+        return idealAmount;
+    }
+
+    function defineStats(reb) {
+        var price = +reb.priceInResquest;
+        var adValue = +reb.adValueApply ?? 0;
+        var adAmount = +reb.adAmount;
+        var adjustValue = adValue/adAmount
+        var status = "Aguardar"
+        if(adjustValue > price) {
+            status = "Comprar"
+        }
+        reb.status = status
+        return status;
+    }
+
+    function getStripedStyle(reb) {
+        return { background: reb.status == 'Comprar' ? '#80ff00' : '#ffbf00'};
+        }
+    
     useEffect(() => {
     }, [props.rebalance])
 
@@ -103,11 +128,11 @@ export default function LineTable(props){
                 />
             </TableCell>
             <TableCell>{calculteIdealPercentWallet(reb)}%</TableCell>
-            <TableCell>Qtd Ideal</TableCell>
+            <TableCell>{reCalculateIdealAmount(reb)}</TableCell>
             <TableCell>{reb.adValueApply}</TableCell>
             <TableCell>{reb.adPercentWallet}%</TableCell>
             <TableCell>{reb.adAmount}</TableCell>
-            <TableCell>{reb.status}</TableCell>
+            <TableCell style={getStripedStyle(reb)}>{defineStats(reb)}</TableCell>
             <TableCell>
             <Button
                 variant="contained"

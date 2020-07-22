@@ -11,8 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -20,13 +18,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from '../listItems';
 import api from '../../services/api'
 import Alert from '@material-ui/lab/Alert';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import LineTable from './LineTable';
-import TableContainer from '@material-ui/core/TableContainer'; 
+import { Paper , TextField, Grid, Container, Button } from '@material-ui/core';
 
 function Copyright() {
   return (
@@ -117,27 +109,20 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
     flexDirection: 'column',
   },
-  fixedHeight: {
-    height: 75,
+  margin: {
+    margin: theme.spacing(1),
   },
+
 }));
-export default function EditWallet() {
+export default function Wallet() {
   
   const classes = useStyles();
+  const fixedHeightPaper = clsx(classes.paper);
   const [open, setOpen] = React.useState(true);
   const [tipo, setTipoAlert, ] = React.useState('error');
   const [messageAlert, setMessageAlert, ] = React.useState('Default');
   const [showAlert, setShowAlert] = React.useState(false);
   const [rebalance, setList] = useState([]);
-  
-
-  function calculateTotalNote() {
-    return rebalance.reduce((total, rb) => total + rb.note, 0);
-  }
-
-  function calculateTotalApplied() {
-    return rebalance.reduce((total, rb) => total + rb.investiment.appliedAmount, 0);
-  }
 
   useEffect(()=>{
     getAllInvestiments();
@@ -190,7 +175,7 @@ export default function EditWallet() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Rebalancear Carteira
+            Carteira
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
@@ -224,37 +209,60 @@ export default function EditWallet() {
         >
           <Alert severity={tipo}>{messageAlert}</Alert>
         </div>
-          <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <TableContainer component={Paper}> 
-                  <Table size="medium">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Ação</TableCell>
-                        <TableCell>Cotação</TableCell>
-                        <TableCell>Nota</TableCell>
-                        <TableCell>Valor Ideal</TableCell>
-                        <TableCell>Porcentagem ideal</TableCell>
-                        <TableCell>Qtd ideal</TableCell>
-                        <TableCell>Valor Ajustado</TableCell>
-                        <TableCell>Percentagem Ajustado</TableCell>
-                        <TableCell>Qtd Ajustado</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>-</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {
-                        rebalance.map((reb, i) => <LineTable saveRebalance={saveRebalance} rebalance={reb} key={i} totalNote={calculateTotalNote()} totalApllied={calculateTotalApplied()} />)
-                      }
-                    </TableBody>
-                  </Table>
-                </TableContainer>  
+        <form className={classes.root} noValidate autoComplete="off">
+          <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={12} lg={3}>
+                <Paper className={fixedHeightPaper} elevation={3}>
+                  <Grid container direction={"row"} spacing={2}>
+                    <Grid item>
+                      <TextField id="stonk" label="Ação" variant="outlined"/>
+                    </Grid>
+                    <Grid item>
+                      <TextField id="amount" label="Quantidade" name="amount" type="number" variant="outlined" />
+                    </Grid>
+                    <Grid item>
+                      <TextField id="broker" label="Corretora" name="broker" variant="outlined" />
+                    </Grid>
+                    <Grid item>
+                      <TextField id="broker" label="Corretora" name="broker" variant="outlined" />
+                    </Grid>
+                    <Grid item>
+                      <TextField id="firstDate" label="Primeira Data de Aplicação" name="firstDate" variant="outlined" />
+                    </Grid>
+                    <Grid item>
+                      <TextField id="appliedAmount" label="Valor Aplicado" name="appAmount" variant="outlined" />
+                    </Grid>
+                    <Grid item>
+                      <TextField id="balance" label="Saldo" name="balance" variant="outlined" />
+                    </Grid>
+                    <Grid item>
+                      <TextField id="rentail" label="Rentabilidade" name="rentail" variant="outlined" />
+                    </Grid>
+                    <Grid item>
+                      <TextField id="portFoli" label="Porcentagem da Carteira" name="portFoli" variant="outlined" />
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Grid>
+              <Grid container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                  >
+                    <Grid item xs={3}>
+                      <Button variant="contained" color="primary" component="span" size="large" className={classes.margin}>
+                        Salvar
+                      </Button>
+                    </Grid>   
+                  </Grid> 
             </Grid>
-          </Grid>
-          <Box pt={4}>
-            <Copyright />
-          </Box>
+            <Box pt={4}>
+              <Copyright />
+            </Box>
+        </Container>
+        </form>
       </main>
     </div>
   );
