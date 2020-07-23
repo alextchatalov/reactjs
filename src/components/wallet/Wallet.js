@@ -18,7 +18,25 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from '../listItems';
 import api from '../../services/api'
 import Alert from '@material-ui/lab/Alert';
-import { Paper , TextField, Grid, Container, Button } from '@material-ui/core';
+
+import { forwardRef } from 'react';
+import Grid from '@material-ui/core/Grid'
+import MaterialTable from "material-table";
+import AddBox from '@material-ui/icons/AddBox';
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import Check from '@material-ui/icons/Check';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Edit from '@material-ui/icons/Edit';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Remove from '@material-ui/icons/Remove';
+import SaveAlt from '@material-ui/icons/SaveAlt';
+import Search from '@material-ui/icons/Search';
+import ViewColumn from '@material-ui/icons/ViewColumn';
 
 function Copyright() {
   return (
@@ -122,35 +140,54 @@ export default function Wallet() {
   const [tipo, setTipoAlert, ] = React.useState('error');
   const [messageAlert, setMessageAlert, ] = React.useState('Default');
   const [showAlert, setShowAlert] = React.useState(false);
-  const [rebalance, setList] = useState([]);
+  const [data, setData] = useState([]);
+  const [iserror, setIserror] = useState(false);
+  const [errorMessages, setErrorMessages] = useState([]);
+
+  var columns = [
+    {title: "Ação", field: "investimentCode", hidden: false},
+    {title: "Tipo", field: "type"},
+    {title: "Corretora", field: "broker"},
+    {title: "Primeira Data de Aplicação", field: "firstDateApplication"},
+    {title: "Valor Aplicado", field: "appliedAmount"},
+    {title: "Saldo", field: "balance"},
+    {title: "Rentabilidade", field: "rentail"},
+    {title: "Porcentagem na Carteira", field: "portfolioShare"},
+    {title: "Quantidade", field: "amount"},
+    ]
+
+  const tableIcons = {
+    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+  };  
 
   useEffect(()=>{
     getAllInvestiments();
   },[]) 
 
   async function getAllInvestiments() {
-    await api.get("/rebalance/list")
-    .then( (rebalance) => {
-      setList(rebalance.data);
-    });
-  }
-
-  function saveRebalance(reb) {
-
-    console.log(reb);
-    //const fd = new FormData();
-    //fd.append('rebalance', reb);
-
-    api.post("/rebalance/update",reb).then(res => {
-      setTipoAlert('success');
-      setMessageAlert('Rebalanceamento da carteira salvo com sucesso!')
-      setShowAlert(true);
-     },
-     error => {
-        setTipoAlert('error');
-        setMessageAlert('Error ao atualizar o rebalanceamento da carteira: ' + error);
-        setShowAlert(true);
-       })
+    await api.get("/investiment/list")
+    .then( (res) => {
+      setData(res.data);
+    }).catch(error=>{
+      setErrorMessages(["Cannot load user data"])
+      setIserror(true)
+    })
   }
 
   const handleDrawerOpen = () => {
@@ -159,6 +196,77 @@ export default function Wallet() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const handleRowAdd = (newData, resolve) => {
+    //validation
+    let errorList = [];
+    if(newData.investimentCode === undefined){
+      errorList.push("Informe a Ação!")
+    }
+
+    if(errorList.length < 1){ //no error
+      api.post("/investiment/newInvestiment", newData)
+        .then(res => {
+          let dataToAdd = [...data];
+          dataToAdd.push(newData);
+          setData(dataToAdd);
+          resolve();
+          setErrorMessages([]);
+          setIserror(false);
+       })
+       .catch(error => {
+          setErrorMessages(["Cannot add data. Server error!"])
+          setIserror(true)
+          resolve()
+        })
+    } else{
+      setErrorMessages(errorList)
+      setIserror(true)
+      resolve()
+    }
+  }
+
+  const handleRowUpdate = (newData, oldData, resolve) => {
+    let errorList = [];
+
+    if(errorList.length < 1){
+      api.patch("/investiment/newInvestiment/"+newData.investimentCode, newData)
+        .then(res => {
+          const dataUpdate = [...data];
+          const index = oldData.tableData.investimentCode;
+          dataUpdate[index] = newData;
+          setData([...dataUpdate]);
+          resolve()
+          setIserror(false)
+          setErrorMessages([])
+        })
+        .catch(error => {
+          setErrorMessages(["Update failed! Server error"])
+          setIserror(true)
+          resolve()
+      })
+    }else{
+      setErrorMessages(errorList)
+      setIserror(true)
+      resolve()
+    }
+  }
+
+  const handleRowDelete = (oldData, resolve) => {
+    api.delete("/investiment/delete/"+oldData.investimentCode)
+      .then(res => {
+        const dataDelete = [...data];
+        const index = oldData.tableData.investimentCode;
+        dataDelete.splice(index, 1);
+        setData([...dataDelete]);
+        resolve()
+      })
+      .catch(error => {
+        setErrorMessages(["Delete failed! Server error"])
+        setIserror(true)
+        resolve()
+      })
+  }
 
   return (
     <div className={classes.root}>
@@ -209,60 +317,26 @@ export default function Wallet() {
         >
           <Alert severity={tipo}>{messageAlert}</Alert>
         </div>
-        <form className={classes.root} noValidate autoComplete="off">
-          <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={12} lg={3}>
-                <Paper className={fixedHeightPaper} elevation={3}>
-                  <Grid container direction={"row"} spacing={2}>
-                    <Grid item>
-                      <TextField id="stonk" label="Ação" variant="outlined"/>
-                    </Grid>
-                    <Grid item>
-                      <TextField id="amount" label="Quantidade" name="amount" type="number" variant="outlined" />
-                    </Grid>
-                    <Grid item>
-                      <TextField id="broker" label="Corretora" name="broker" variant="outlined" />
-                    </Grid>
-                    <Grid item>
-                      <TextField id="broker" label="Corretora" name="broker" variant="outlined" />
-                    </Grid>
-                    <Grid item>
-                      <TextField id="firstDate" label="Primeira Data de Aplicação" name="firstDate" variant="outlined" />
-                    </Grid>
-                    <Grid item>
-                      <TextField id="appliedAmount" label="Valor Aplicado" name="appAmount" variant="outlined" />
-                    </Grid>
-                    <Grid item>
-                      <TextField id="balance" label="Saldo" name="balance" variant="outlined" />
-                    </Grid>
-                    <Grid item>
-                      <TextField id="rentail" label="Rentabilidade" name="rentail" variant="outlined" />
-                    </Grid>
-                    <Grid item>
-                      <TextField id="portFoli" label="Porcentagem da Carteira" name="portFoli" variant="outlined" />
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-              <Grid container
-                    spacing={0}
-                    direction="column"
-                    alignItems="center"
-                    justify="center"
-                  >
-                    <Grid item xs={3}>
-                      <Button variant="contained" color="primary" component="span" size="large" className={classes.margin}>
-                        Salvar
-                      </Button>
-                    </Grid>   
-                  </Grid> 
-            </Grid>
-            <Box pt={4}>
-              <Copyright />
-            </Box>
-        </Container>
-        </form>
+        <MaterialTable
+                        title="Carteira"
+                        columns={columns}
+                        data={data}
+                        icons={tableIcons}
+                        editable={{
+                          onRowUpdate: (newData, oldData) =>
+                            new Promise((resolve) => {
+                              handleRowUpdate(newData, oldData, resolve);
+                        }),
+                        onRowAdd: (newData) =>
+                          new Promise((resolve) => {
+                            handleRowAdd(newData, resolve)
+                          }),
+                        onRowDelete: (oldData) =>
+                          new Promise((resolve) => {
+                            handleRowDelete(oldData, resolve)
+                          }),
+                        }}
+                      />
       </main>
     </div>
   );
