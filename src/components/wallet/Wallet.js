@@ -37,7 +37,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-
+import {TextField} from '@material-ui/core';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -147,7 +147,15 @@ export default function Wallet() {
   var columns = [
     {title: "Ação", field: "investimentCode", editable: 'never'},
     {title: "Tipo", field: "type", editable: 'never'},
-    {title: "Quantidade", field: "amount"},
+    {title: "Quantidade", field: "amount", 
+    editComponent: props => (
+        <TextField
+          type="number"
+          value={props.value}
+          size="small"
+          onChange={e => updatePortfolioShare(e)}
+      />
+    )},
     {title: "Corretora", field: "broker"},
     {title: "Primeira Data de Aplicação", field: "firstDateApplication"},
     {title: "Valor Aplicado", render: rowData =>  <CurrencyTextField
@@ -231,10 +239,25 @@ export default function Wallet() {
     }
   }
 
+  function calculateTotalApplied() {
+    return data.reduce((total, inv) => total + inv.appliedAmount, 0);
+  }
+
+  function updatePortfolioShare(props) {
+    console.log(props);
+    var data = props.target;
+    var totalAppliedAmount = calculateTotalApplied();
+    var appliedAmount = data.appliedAmount;
+    var updatedPortfolioShare = totalAppliedAmount / appliedAmount;
+    data.portfolioShare = updatedPortfolioShare.toFixed(2);
+    props.onChange(props.target.value);
+  }
+
   const handleRowUpdate = (newData, oldData, resolve) => {
     let errorList = [];
 
     if(errorList.length < 1){
+
       api.patch("/investiment/updateInvestimet/"+newData.investimentCode, newData)
         .then(res => {
           const dataUpdate = [...data];
