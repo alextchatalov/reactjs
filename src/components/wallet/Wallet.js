@@ -18,7 +18,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from '../listItems';
 import api from '../../services/api'
 import Alert from '@material-ui/lab/Alert';
-
+import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 import { forwardRef } from 'react';
 import Grid from '@material-ui/core/Grid'
 import MaterialTable from "material-table";
@@ -145,15 +145,20 @@ export default function Wallet() {
   const [errorMessages, setErrorMessages] = useState([]);
 
   var columns = [
-    {title: "Ação", field: "investimentCode", hidden: false},
-    {title: "Tipo", field: "type"},
+    {title: "Ação", field: "investimentCode", editable: 'never'},
+    {title: "Tipo", field: "type", editable: 'never'},
+    {title: "Quantidade", field: "amount"},
     {title: "Corretora", field: "broker"},
     {title: "Primeira Data de Aplicação", field: "firstDateApplication"},
-    {title: "Valor Aplicado", field: "appliedAmount"},
+    {title: "Valor Aplicado", render: rowData =>  <CurrencyTextField
+                                                                value={rowData === undefined ? 0 : rowData.appliedAmount}
+                                                                currencySymbol="R$"
+                                                                decimalCharacter=","
+                                                                digitGroupSeparator="."                    
+                                                              /> },
     {title: "Saldo", field: "balance"},
-    {title: "Rentabilidade", field: "rentail"},
-    {title: "Porcentagem na Carteira", field: "portfolioShare"},
-    {title: "Quantidade", field: "amount"},
+    {title: "Rentabilidade", editable: 'never', field: "rentail"},
+    {title: "Porcentagem na Carteira", editable: 'never', field: "portfolioShare"},
     ]
 
   const tableIcons = {
@@ -230,15 +235,16 @@ export default function Wallet() {
     let errorList = [];
 
     if(errorList.length < 1){
-      api.patch("/investiment/newInvestiment/"+newData.investimentCode, newData)
+      api.patch("/investiment/updateInvestimet/"+newData.investimentCode, newData)
         .then(res => {
           const dataUpdate = [...data];
-          const index = oldData.tableData.investimentCode;
+          console.log(oldData.tableData.id);
+          const index = oldData.tableData.id;
           dataUpdate[index] = newData;
           setData([...dataUpdate]);
-          resolve()
-          setIserror(false)
-          setErrorMessages([])
+          resolve();
+          setIserror(false);
+          setErrorMessages([]);
         })
         .catch(error => {
           setErrorMessages(["Update failed! Server error"])
