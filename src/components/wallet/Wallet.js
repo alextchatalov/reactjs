@@ -38,6 +38,8 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import {TextField} from '@material-ui/core';
+import NumberFormat from 'react-number-format';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -153,17 +155,27 @@ export default function Wallet() {
           type="number"
           value={props.value}
           size="small"
-          onChange={e => updatePortfolioShare(e)}
+          onChange={e =>  props.onChange(e.target.value)}
       />
     )},
     {title: "Corretora", field: "broker"},
     {title: "Primeira Data de Aplicação", field: "firstDateApplication"},
-    {title: "Valor Aplicado", render: rowData =>  <CurrencyTextField
-                                                                value={rowData === undefined ? 0 : rowData.appliedAmount}
-                                                                currencySymbol="R$"
-                                                                decimalCharacter=","
-                                                                digitGroupSeparator="."                    
-                                                              /> },
+    {title: "Valor Aplicado",render: rowData => <CurrencyTextField
+                                                  value={rowData.appliedAmount}
+                                                  currencySymbol="R$"
+                                                  decimalCharacter=","
+                                                  digitGroupSeparator="."
+                                                  disabled                 
+                                                />,
+    editComponent: props => (
+      <CurrencyTextField
+        value={props.value}
+        currencySymbol="R$"
+        decimalCharacter=","
+        digitGroupSeparator="." 
+        onChange={e => props.onChange(e.target.value)}                   
+      />
+  )},
     {title: "Saldo", field: "balance"},
     {title: "Rentabilidade", editable: 'never', field: "rentail"},
     {title: "Porcentagem na Carteira", editable: 'never', field: "portfolioShare"},
@@ -239,29 +251,24 @@ export default function Wallet() {
     }
   }
 
-  function calculateTotalApplied() {
-    return data.reduce((total, inv) => total + inv.appliedAmount, 0);
+  function currencyFormat(num) {
+    return '$' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   }
 
-  function updatePortfolioShare(props) {
-    console.log(props);
-    var data = props.target;
-    var totalAppliedAmount = calculateTotalApplied();
-    var appliedAmount = data.appliedAmount;
-    var updatedPortfolioShare = totalAppliedAmount / appliedAmount;
-    data.portfolioShare = updatedPortfolioShare.toFixed(2);
-    props.onChange(props.target.value);
+  function calculateTotalApplied() {
+    var total = data.reduce((total, inv) => total + inv.appliedAmount, 0);
+    return total;
   }
 
   const handleRowUpdate = (newData, oldData, resolve) => {
     let errorList = [];
 
     if(errorList.length < 1){
+      console.log(newData.portfolioShare);
 
       api.patch("/investiment/updateInvestimet/"+newData.investimentCode, newData)
         .then(res => {
           const dataUpdate = [...data];
-          console.log(oldData.tableData.id);
           const index = oldData.tableData.id;
           dataUpdate[index] = newData;
           setData([...dataUpdate]);

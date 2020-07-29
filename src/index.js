@@ -20,9 +20,7 @@ import Keycloak from 'keycloak-js'
 //  }
 //
   ReactDOM.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
+      <App />,
     document.getElementById('root')
   );
 
