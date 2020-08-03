@@ -147,8 +147,8 @@ export default function Wallet() {
   const [errorMessages, setErrorMessages] = useState([]);
 
   var columns = [
-    {title: "Ação", field: "investimentCode", editable: 'never'},
-    {title: "Tipo", field: "type", editable: 'never'},
+    {title: "Ação", field: "investimentCode"},
+    {title: "Tipo", field: "type"},
     {title: "Quantidade", field: "amount", 
     editComponent: props => (
         <TextField
