@@ -43,7 +43,7 @@ import NumberFormat from 'react-number-format';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
+      {'Copyright Â© '}
       <Link color="inherit" href="https://material-ui.com/">
         Your Website
       </Link>{' '}
@@ -160,22 +160,7 @@ export default function Wallet() {
     )},
     {title: "Corretora", field: "broker"},
     {title: "Primeira Data de Aplicação", field: "firstDateApplication"},
-    {title: "Valor Aplicado",render: rowData => <CurrencyTextField
-                                                  value={rowData.appliedAmount}
-                                                  currencySymbol="R$"
-                                                  decimalCharacter=","
-                                                  digitGroupSeparator="."
-                                                  disabled                 
-                                                />,
-    editComponent: props => (
-      <CurrencyTextField
-        value={props.value}
-        currencySymbol="R$"
-        decimalCharacter=","
-        digitGroupSeparator="." 
-        onChange={e => props.onChange(e.target.value)}                   
-      />
-  )},
+    {title: "Valor Aplicado", field: "appliedAmount"},
     {title: "Saldo", field: "balance"},
     {title: "Rentabilidade", editable: 'never', field: "rentail"},
     {title: "Porcentagem na Carteira", editable: 'never', field: "portfolioShare"},
@@ -259,19 +244,18 @@ export default function Wallet() {
     var total = data.reduce((total, inv) => total + inv.appliedAmount, 0);
     return total;
   }
-
+  
   const handleRowUpdate = (newData, oldData, resolve) => {
     let errorList = [];
 
     if(errorList.length < 1){
-      console.log(newData.portfolioShare);
-
       api.patch("/investiment/updateInvestimet/"+newData.investimentCode, newData)
         .then(res => {
-          const dataUpdate = [...data];
-          const index = oldData.tableData.id;
-          dataUpdate[index] = newData;
-          setData([...dataUpdate]);
+          //const dataUpdate = [...data];
+          //const index = oldData.tableData.id;
+          //dataUpdate[index] = newData;
+          //setData([...dataUpdate]);
+          setData(res.data);
           resolve();
           setIserror(false);
           setErrorMessages([]);
