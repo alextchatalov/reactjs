@@ -3,7 +3,7 @@ import { getToken } from "./auth";
 axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 const api = axios.create({
-  baseURL: "https://investiment-backend.herokuapp.com/api/v1"
+  baseURL: "https://cors-anywhere.herokuapp.com/https://investiment-backend.herokuapp.com/api/v1"
 });
 
 api.interceptors.request.use(async config => {
