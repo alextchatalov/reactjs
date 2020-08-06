@@ -38,7 +38,8 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import {TextField} from '@material-ui/core';
-import NumberFormat from 'react-number-format';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 function Copyright() {
   return (
@@ -145,10 +146,24 @@ export default function Wallet() {
   const [data, setData] = useState([]);
   const [iserror, setIserror] = useState(false);
   const [errorMessages, setErrorMessages] = useState([]);
-
+  const [age, setAge] = React.useState('');
+  
   var columns = [
     {title: "Ação", field: "investimentCode"},
-    {title: "Tipo", field: "type"},
+    {title: "Tipo", field: "type", editComponent: props => (
+      <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={props.value}
+          onChange={e =>  props.onChange(e.target.value)}
+        >
+          <MenuItem value={'Ação'}>Ação</MenuItem>
+          <MenuItem value={'Fundo Imobiliário'}>Fundo Imobiliário</MenuItem>
+          <MenuItem value={'Tesouro Direto'}>Tesouro Direto</MenuItem>
+          <MenuItem value={'Conta Corrente'}>Conta Corrente</MenuItem>
+          <MenuItem value={'Outro'}>Outro</MenuItem>
+        </Select>
+    )},
     {title: "Quantidade", field: "amount", 
     editComponent: props => (
         <TextField
@@ -259,6 +274,10 @@ export default function Wallet() {
     var total = data.reduce((total, inv) => total + inv.appliedAmount, 0);
     return total;
   }
+
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
 
   const handleRowUpdate = (newData, oldData, resolve) => {
     let errorList = [];
