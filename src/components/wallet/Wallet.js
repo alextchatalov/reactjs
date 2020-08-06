@@ -146,8 +146,11 @@ export default function Wallet() {
   const [data, setData] = useState([]);
   const [iserror, setIserror] = useState(false);
   const [errorMessages, setErrorMessages] = useState([]);
-  const [age, setAge] = React.useState('');
-  
+  let real = new Intl.NumberFormat([], {
+    style: 'currency',
+    currency: 'BRL'
+  });
+
   var columns = [
     {title: "Ação", field: "investimentCode"},
     {title: "Tipo", field: "type", editComponent: props => (
@@ -174,14 +177,15 @@ export default function Wallet() {
       />
     )},
     {title: "Corretora", field: "broker"},
-    {title: "Primeira Data de Aplicação", field: "firstDateApplication"},
-    {title: "Valor Aplicado",render: rowData => <CurrencyTextField
-                                                  value={rowData.appliedAmount}
-                                                  currencySymbol="R$"
-                                                  decimalCharacter=","
-                                                  digitGroupSeparator="."
-                                                  disabled                 
-                                                />,
+    {title: "Primeira Data de Aplicação", render: rowData => (
+      <TextField
+        type="date"
+        value={rowData.firstDateApplication}
+        disabled
+      />
+    
+    )},
+    {title: "Valor Aplicado", render: rowData => real.format(rowData.appliedAmount),
     editComponent: props => (
       <CurrencyTextField
         value={props.value}
@@ -191,9 +195,9 @@ export default function Wallet() {
         onChange={e => props.onChange(e.target.value)}                   
       />
   )},
-    {title: "Saldo", field: "balance"},
-    {title: "Rentabilidade", editable: 'never', field: "rentail"},
-    {title: "Porcentagem na Carteira", editable: 'never', field: "portfolioShare"},
+    {title: "Saldo", render: rowData => real.format(rowData.balance)},
+    {title: "Rentabilidade %", editable: 'never', field: "rentail"},
+    {title: "Porcentagem na Carteira %", editable: 'never', field: "portfolioShare"},
     ]
 
   const tableIcons = {
@@ -274,10 +278,6 @@ export default function Wallet() {
     var total = data.reduce((total, inv) => total + inv.appliedAmount, 0);
     return total;
   }
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
 
   const handleRowUpdate = (newData, oldData, resolve) => {
     let errorList = [];
