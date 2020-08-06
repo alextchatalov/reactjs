@@ -292,7 +292,7 @@ export default function Wallet() {
     api.delete("/investiment/delete/"+oldData.investimentCode)
       .then(res => {
         const dataDelete = [...data];
-        const index = oldData.tableData.investimentCode;
+        const index = oldData.tableData.id;
         dataDelete.splice(index, 1);
         setData([...dataDelete]);
         resolve()
